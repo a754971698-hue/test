@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixso - 在线UI设计工具</title>
+    <style>
+        /* 基础重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'PingFang SC', 'Microsoft YaHei', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            /* 模拟背景微妙的渐变色彩 */
+            background: linear-gradient(120deg, #f8f9fc 0%, #f1f4fb 50%, #f9f5f8 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #1a1a1a;
+        }
+
+        /* 顶部导航栏 */
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 40px;
+            background: transparent;
+            position: relative;
+            z-height: 10;
+        }
+
+        /* Logo 区域 */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .logo-icon {
+            width: 28px;
+            height: 28px;
+            /* 简易模拟 logo 颜色 */
+            background: conic-gradient(from 180deg at 50% 50%, #ff5c8e 0deg, #8155FA 180deg, #ff5c8e 360deg);
+            border-radius: 50%;
+            position: relative;
+        }
+        .logo-icon::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #fff;
+            border-radius: 50%;
+            top: 8px;
+            left: 8px;
+        }
+
+        .logo-text {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        /* 导航链接 (实现跳转) */
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 32px;
+        }
+
+        .nav-links li {
+            position: relative;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-size: 14px;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .nav-links a:hover {
+            color: #8155FA;
+        }
+
+        /* 下拉箭头图标 */
+        .icon-down {
+            font-size: 10px;
+            color: #666;
+            transform: scaleY(0.6);
+        }
+
+        /* 右侧操作区 */
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .btn-workspace {
+            background-color: #8155FA;
+            color: white;
+            border: none;
+            padding: 8px 24px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        .btn-workspace:hover {
+            opacity: 0.9;
+        }
+
+        .company-info {
+            font-size: 12px;
+            color: #555;
+        }
+
+        /* 主视觉区域 */
+        .hero-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 100px 20px;
+            position: relative;
+        }
+
+        /* 左侧文本内容 */
+        .hero-text {
+            flex: 1;
+            max-width: 500px;
+        }
+
+        h1 {
+            font-size: 56px;
+            font-weight: 800;
+            color: #1a1a1a;
+            margin-bottom: 24px;
+            line-height: 1.2;
+            letter-spacing: 2px;
+        }
+
+        h1 .highlight {
+            color: #8155FA;
+        }
+
+        .hero-description {
+            font-size: 18px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 40px;
+        }
+
+        /* 按钮组 */
+        .btn-group {
+            display: flex;
+            gap: 16px;
+        }
+
+        .btn {
+            padding: 14px 32px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: #8155FA;
+            color: white;
+            border: none;
+            box-shadow: 0 4px 12px rgba(129, 85, 250, 0.3);
+        }
+
+        .btn-primary:hover {
+            background-color: #7042f4;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(129, 85, 250, 0.4);
+        }
+
+        .btn-secondary {
+            background-color: white;
+            color: #1a1a1a;
+            border: 1px solid #e0e0e0;
+        }
+
+        .btn-secondary:hover {
+            border-color: #ccc;
+            background-color: #f9f9f9;
+        }
+
+        /* 右侧视觉图形区 (使用 CSS 模拟排版和质感) */
+        .hero-graphics {
+            flex: 1;
+            position: relative;
+            height: 500px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 悬浮卡片通用样式 */
+        .card {
+            position: absolute;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+            padding: 15px;
+            transition: transform 0.5s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+        }
+
+        /* 左侧带图片的渐变卡片 */
+        .card-main {
+            width: 240px;
+            height: 320px;
+            left: 20px;
+            top: 50px;
+            z-index: 2;
+        }
+
+        .card-main .inner-gradient {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, #a481ff, #f391c7);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 模拟播放器UI */
+        .mock-search {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            height: 24px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 12px;
+        }
+
+        .card-main .info {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .card-main h3 {
+            font-size: 16px;
+        }
+
+        .color-palette {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .color-circle {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+        }
+
+        /* 右上方数据卡片 */
+        .card-data {
+            width: 260px;
+            height: 160px;
+            right: 10px;
+            top: 20px;
+            background: linear-gradient(135deg, #9b72ff, #734cf6);
+            color: white;
+            z-index: 1;
+        }
+
+        .card-data h2 {
+            font-size: 28px;
+            margin-top: 20px;
+        }
+
+        /* 模拟折线图 */
+        .line-chart-mock {
+            width: 100%;
+            height: 40px;
+            margin-top: 20px;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+            position: relative;
+        }
+        .line-chart-mock::after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 40px;
+            border-right: 2px solid #fff;
+            border-top: 2px solid #fff;
+            border-radius: 0 20px 0 0;
+            top: -10px;
+            left: 50px;
+            transform: rotate(45deg);
+        }
+
+        /* 右下方图表卡片 */
+        .card-bar {
+            width: 260px;
+            height: 140px;
+            right: 10px;
+            bottom: 60px;
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        .icon-column {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .icon-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 12px;
+        }
+
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 6px;
+            height: 80px;
+            flex: 1;
+        }
+
+        .bar {
+            width: 8px;
+            background-color: #eaeaea;
+            border-radius: 4px;
+        }
+
+        .bar.active {
+            background-color: #3cb4ff;
+            height: 100% !important;
+            border: 1px solid #0099ff;
+            position: relative;
+        }
+        
+        /* 模拟 active bar 的外框虚线 */
+        .bar.active::before {
+            content: '';
+            position: absolute;
+            top: -4px; bottom: -4px; left: -4px; right: -4px;
+            border: 1px dashed #0099ff;
+            border-radius: 2px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <div class="logo-icon"></div>
+            <div class="logo-text">Pixso</div>
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="#product">产品</a></li>
+            <li><a href="#community">资源社区 <span class="icon-down">▼</span></a></li>
+            <li><a href="#vip">会员</a></li>
+            <li><a href="#download">下载</a></li>
+            <li><a href="#help">帮助中心</a></li>
+            <li><a href="#enterprise">企业服务 <span class="icon-down">▼</span></a></li>
+        </ul>
+
+        <div class="header-right">
+            <button class="btn-workspace">进入工作台</button>
+            <span class="company-info">万兴科技 (300624.SZ) 生态成员</span>
+        </div>
+    </header>
+
+    <main class="hero-section">
+        <div class="hero-text">
+            <h1>在线<span class="highlight">UI设计</span>工具</h1>
+            <p class="hero-description">
+                Pixso 集合了UI设计师必备强大设计功能，是一款高效的在线设计协同工具
+            </p>
+            <div class="btn-group">
+                <button class="btn btn-primary">使用 &rarr;</button>
+                <button class="btn btn-secondary">下载客户端</button>
+            </div>
+        </div>
+
+        <div class="hero-graphics">
+            <div class="card card-main">
+                <div class="inner-gradient">
+                    <div class="mock-search"></div>
+                </div>
+                <div class="info">
+                    <div style="height: 6px; background: #eee; border-radius: 3px; width: 100%; margin-top: 10px;">
+                        <div style="height: 100%; background: #8155FA; width: 40%; border-radius: 3px;"></div>
+                    </div>
+                    <h3>Pixso</h3>
+                    <div class="color-palette">
+                        <span style="font-size: 12px; color: #666;">🖌️</span>
+                        <div style="flex: 1;"></div>
+                        <div class="color-circle" style="background: #f5f5f5; border: 1px solid #ddd;"></div>
+                        <div class="color-circle" style="background: #8155FA;"></div>
+                        <div class="color-circle" style="background: #ff5c8e;"></div>
+                        <div class="color-circle" style="background: #333;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card card-data">
+                <div style="display: flex; justify-content: space-between;">
+                    <div style="width: 24px; height: 24px; background: rgba(255,255,255,0.3); border-radius: 50%;"></div>
+                    <div style="color: rgba(255,255,255,0.7); font-size: 12px;">~ 📊</div>
+                </div>
+                <h2>198.50</h2>
+                <div class="line-chart-mock"></div>
+            </div>
+
+            <div class="card card-bar">
+                <div class="icon-column">
+                    <div class="icon-circle" style="background: #8155FA;">◯</div>
+                    <div class="icon-circle" style="background: #ff5c8e;">♡</div>
+                </div>
+                <div class="bar-chart">
+                    <div class="bar" style="height: 30%;"></div>
+                    <div class="bar" style="height: 60%;"></div>
+                    <div class="bar" style="height: 20%;"></div>
+                    <div class="bar" style="height: 40%;"></div>
+                    <div class="bar" style="height: 80%;"></div>
+                    <div class="bar active" style="height: 100%;"></div>
+                    <div class="bar" style="height: 50%;"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>
